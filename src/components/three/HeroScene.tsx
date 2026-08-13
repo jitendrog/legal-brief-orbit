@@ -191,9 +191,12 @@ function MouseRig({ reduced }: { reduced: boolean }) {
 export default function HeroScene({
   quality = "high",
   reducedMotion = false,
+  offsetX = 0,
 }: {
   quality?: "high" | "low";
   reducedMotion?: boolean;
+  /** Horizontal shift of the whole composition, so hero copy stays readable. */
+  offsetX?: number;
 }) {
   const low = quality === "low";
   return (
@@ -209,11 +212,14 @@ export default function HeroScene({
       <directionalLight position={[4, 6, 4]} intensity={1.4} color="#cfe8f2" />
       <pointLight position={[-4, -2, 2]} intensity={18} color="#4fa3c7" distance={12} />
       <pointLight position={[3, 3, -3]} intensity={10} color="#e2c17a" distance={12} />
-      <DocumentStack reduced={reducedMotion} />
-      <NeuralNodes count={low ? 26 : 54} reduced={reducedMotion} />
-      <ProcessingRings reduced={reducedMotion} />
-      <Particles count={low ? 160 : 420} reduced={reducedMotion} />
+      <group position={[offsetX, 0, 0]}>
+        <DocumentStack reduced={reducedMotion} />
+        <NeuralNodes count={low ? 26 : 54} reduced={reducedMotion} />
+        <ProcessingRings reduced={reducedMotion} />
+      </group>
+      <Particles count={low ? 140 : 400} reduced={reducedMotion} />
       <MouseRig reduced={reducedMotion || low} />
     </Canvas>
   );
 }
+

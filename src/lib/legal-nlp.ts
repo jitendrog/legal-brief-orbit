@@ -109,15 +109,19 @@ export function segmentSentences(raw: string): string[] {
   if (!text) return [];
 
   // Protect common legal abbreviations from being treated as sentence ends.
-  const protectedText = text.replace(
-    /\b(No|Nos|Vs|vs|v|Hon|Hon'ble|Mr|Mrs|Ms|Dr|Smt|Sri|Shri|Ors|Anr|Sec|Art|Cri|Crl|Ltd|Pvt|Govt|Addl|Retd|J|JJ)\./g,
-    (m) => m.replace(".", "§DOT§"),
-  );
+  const protectedText = text
+    .replace(
+      /\b(No|Nos|Vs|vs|v|Hon|Hon'ble|Mr|Mrs|Ms|Dr|Smt|Sri|Shri|Ors|Anr|Sec|Art|Cri|Crl|Ltd|Pvt|Govt|Addl|Retd|J|JJ|Rs|Ex|Para|Cl|Sch|Regd|Ch|Dt|Ors|Co)\./g,
+      (m) => m.replace(".", "§DOT§"),
+    )
+    // Single-letter initials in judge / party names: "A. K. Sharma".
+    .replace(/\b([A-Z])\.(?=\s*[A-Z])/g, "$1§DOT§");
 
   return protectedText
     .split(/(?<=[.?!])\s+(?=[A-Z0-9"“(])/)
     .map((s) => s.replace(/§DOT§/g, ".").trim())
     .filter((s) => s.split(/\s+/).length >= 5);
+
 }
 
 function tokenize(sentence: string): string[] {
@@ -200,6 +204,9 @@ function capitalise(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+/** Number of top-ranked sentences woven into the generated narrative. */
+export const NARRATIVE_SENTENCES = 6;
+
 /** Rule-based abstractive-style generation (prototype stand-in for a Transformer). */
 export function generateAbstractive(selected: Sentence[]): string {
   if (!selected.length) return "";
@@ -211,7 +218,7 @@ export function generateAbstractive(selected: Sentence[]): string {
     "On the merits, ",
     "In conclusion, ",
   ];
-  const parts = selected.slice(0, 6).map((s, i) => {
+  const parts = selected.slice(0, NARRATIVE_SENTENCES).map((s, i) => {
     const body = compress(s.text);
     const lead = connectives[i] ?? "";
     return lead ? lead + body.charAt(0).toLowerCase() + body.slice(1) : capitalise(body);
@@ -219,14 +226,25 @@ export function generateAbstractive(selected: Sentence[]): string {
   return parts.join(" ").replace(/\s{2,}/g, " ").trim();
 }
 
+/**
+ * Hybrid integration: the generated narrative, followed by the highest-ranked
+ * extracted sentences that the narrative did NOT already consume — so no text
+ * is duplicated between the two halves of the output.
+ */
 export function buildHybrid(abstractive: string, selected: Sentence[]): string {
-  const anchors = selected.slice(0, 4).map((s) => compress(s.text));
-  const narrative = abstractive;
+  const anchors = selected
+    .slice(NARRATIVE_SENTENCES, NARRATIVE_SENTENCES + 4)
+    .map((s) => compress(s.text))
+    .filter(Boolean);
+
+  if (!anchors.length) return abstractive;
+
   const preserved = anchors
     .map((a, i) => `${i + 1}. ${a.endsWith(".") ? a : a + "."}`)
     .join("\n");
-  return `${narrative}\n\nKey factual and legal anchors preserved from the source document:\n${preserved}`;
+  return `${abstractive}\n\nAdditional factual and legal anchors preserved verbatim from the source document:\n${preserved}`;
 }
+
 
 const RX = {
   court:
@@ -289,8 +307,15 @@ export function runPipeline(text: string, ratio = 0.22): AnalysisResult {
     .sort((a, b) => a.index - b.index)
     .map((s) => ({ ...s }));
 
-  const abstractive = generateAbstractive([...extractive].sort((a, b) => a.rank - b.rank));
-  const hybrid = buildHybrid(abstractive, [...extractive].sort((a, b) => a.rank - b.rank));
+  // Narrative uses the strongest sentences but restores document order for
+  // readability; the remaining selected sentences become verbatim anchors.
+  const byRank = [...extractive].sort((a, b) => a.rank - b.rank);
+  const narrative = byRank.slice(0, NARRATIVE_SENTENCES).sort((a, b) => a.index - b.index);
+  const rest = byRank.slice(NARRATIVE_SENTENCES).sort((a, b) => a.index - b.index);
+
+  const abstractive = generateAbstractive(narrative);
+  const hybrid = buildHybrid(abstractive, [...narrative, ...rest]);
+
 
   const ended = typeof performance !== "undefined" ? performance.now() : Date.now();
   const originalWords = countWords(text);
