@@ -26,7 +26,7 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
   });
 
   return (
-    <group ref={group}>
+    <group ref={group} rotation={[-0.28, 0.35, 0.08]} scale={1.15}>
       {sheets.map((i) => (
         <Float
           key={i}
