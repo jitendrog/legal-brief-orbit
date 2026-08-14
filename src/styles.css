@@ -125,7 +125,7 @@
 
   html {
     scroll-behavior: smooth;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
@@ -144,7 +144,7 @@
   }
 
   ::selection {
-    background: oklch(0.78 0.13 205 / 30%);
+    background: oklch(0.55 0.11 210 / 18%);
   }
 }
 
@@ -163,12 +163,7 @@
 
 @utility panel {
   background:
-    linear-gradient(
-      180deg,
-      oklch(1 0 0 / 4%) 0%,
-      oklch(1 0 0 / 0.5%) 40%,
-      transparent 100%
-    ),
+    linear-gradient(180deg, var(--panel-sheen) 0%, transparent 55%),
     var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
@@ -187,8 +182,8 @@
 
 @utility grid-lines {
   background-image:
-    linear-gradient(oklch(1 0 0 / 3.5%) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(1 0 0 / 3.5%) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 

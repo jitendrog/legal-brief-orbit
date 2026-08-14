@@ -6,10 +6,10 @@ import * as THREE from "three";
 function useAccent() {
   return useMemo(
     () => ({
-      cyan: new THREE.Color("#7fd6e8"),
-      gold: new THREE.Color("#e2c17a"),
-      paper: new THREE.Color("#cfd8e3"),
-      deep: new THREE.Color("#1b2434"),
+      cyan: new THREE.Color("#2f8ba8"),
+      gold: new THREE.Color("#b08a3c"),
+      paper: new THREE.Color("#ffffff"),
+      deep: new THREE.Color("#c9d6e2"),
     }),
     [],
   );
@@ -120,7 +120,7 @@ function NeuralNodes({ count, reduced }: { count: number; reduced: boolean }) {
         <Line
           key={i}
           points={[e[0], e[1]]}
-          color="#5f93a8"
+          color="#7ba7bd"
           transparent
           opacity={0.22}
           lineWidth={1}
@@ -176,7 +176,7 @@ function Particles({ count, reduced }: { count: number; reduced: boolean }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.022} color="#8fb6c9" transparent opacity={0.55} />
+      <pointsMaterial size={0.022} color="#9ab8ca" transparent opacity={0.55} />
     </points>
   );
 }
@@ -210,12 +210,12 @@ export default function HeroScene({
       gl={{ antialias: !low, powerPreference: "high-performance" }}
       frameloop={reducedMotion ? "demand" : "always"}
     >
-      <color attach="background" args={["#14181f"]} />
-      <fog attach="fog" args={["#14181f", 7, 16]} />
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[4, 6, 4]} intensity={1.4} color="#cfe8f2" />
-      <pointLight position={[-4, -2, 2]} intensity={18} color="#4fa3c7" distance={12} />
-      <pointLight position={[3, 3, -3]} intensity={10} color="#e2c17a" distance={12} />
+      <color attach="background" args={["#f7f9fb"]} />
+      <fog attach="fog" args={["#f7f9fb", 7, 16]} />
+      <ambientLight intensity={1.15} />
+      <directionalLight position={[4, 6, 4]} intensity={1.4} color="#ffffff" />
+      <pointLight position={[-4, -2, 2]} intensity={12} color="#4fa3c7" distance={12} />
+      <pointLight position={[3, 3, -3]} intensity={7} color="#e2c17a" distance={12} />
       <group position={[offsetX, 0, 0]}>
         <DocumentStack reduced={reducedMotion} />
         <NeuralNodes count={low ? 26 : 54} reduced={reducedMotion} />
