@@ -22,19 +22,20 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
 
   useFrame((state) => {
     if (!group.current || reduced) return;
-    group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.25) * 0.35;
+    group.current.rotation.y = 0.18 + Math.sin(state.clock.elapsedTime * 0.22) * 0.16;
   });
 
+
   return (
-    <group ref={group}>
+    <group ref={group} position={[0, 0, -1.2]} rotation={[-1.05, 0.18, 0.06]} scale={1.05}>
       {sheets.map((i) => (
         <Float
           key={i}
           speed={reduced ? 0 : 1.1 + i * 0.12}
-          rotationIntensity={reduced ? 0 : 0.12}
+          rotationIntensity={reduced ? 0 : 0.06}
           floatIntensity={reduced ? 0 : 0.35}
         >
-          <mesh position={[(i - 2) * 0.08, (i - 2) * 0.36, (i - 2) * 0.05]} castShadow>
+          <mesh position={[(i - 2) * 0.06, (i - 2) * 0.26, (i - 2) * 0.04]} castShadow>
             <boxGeometry args={[1.5, 0.02, 2.05]} />
             <meshStandardMaterial
               color={c.paper}
@@ -44,7 +45,10 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
               emissiveIntensity={0.4}
             />
           </mesh>
-          <mesh position={[(i - 2) * 0.08, (i - 2) * 0.36 + 0.012, (i - 2) * 0.05]}>
+          <mesh
+            position={[(i - 2) * 0.06, (i - 2) * 0.26 + 0.013, (i - 2) * 0.04]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          >
             <planeGeometry args={[1.2, 1.7]} />
             <meshBasicMaterial
               color={i === 2 ? c.cyan : c.deep}

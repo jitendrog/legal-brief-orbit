@@ -26,7 +26,7 @@ export function Hero() {
             <HeroScene
               quality={low ? "low" : "high"}
               reducedMotion={reduced}
-              offsetX={low ? 0 : 1.9}
+              offsetX={low ? 0 : 1.0}
             />
           </Suspense>
         </ClientOnly>
@@ -34,7 +34,7 @@ export function Hero() {
       {/* Readability scrims: vertical on small screens, left-weighted on desktop. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-background/85 via-background/65 to-background lg:hidden"
+        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-background/75 via-background/55 to-background lg:hidden"
       />
       <div
         aria-hidden
