@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -66,6 +66,9 @@ function MetricCard({ name, note }: { name: string; note: string }) {
 
 function ResearchPage() {
   const run = useMemo(() => runPipeline(SAMPLE_JUDGMENT), []);
+  // Runtime is machine-dependent, so only reveal it after hydration.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const chartData = [
     { label: "Original words", value: run.stats.originalWords },
@@ -119,7 +122,7 @@ function ResearchPage() {
               <div>
                 <dt className="text-eyebrow">Processing time</dt>
                 <dd className="mt-1 font-display text-3xl font-semibold">
-                  {run.stats.processingMs} ms
+                  {mounted ? `${run.stats.processingMs} ms` : "—"}
                 </dd>
               </div>
             </dl>
