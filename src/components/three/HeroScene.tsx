@@ -22,8 +22,9 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
 
   useFrame((state) => {
     if (!group.current || reduced) return;
-    group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.25) * 0.35;
+    group.current.rotation.y = 0.35 + Math.sin(state.clock.elapsedTime * 0.25) * 0.25;
   });
+
 
   return (
     <group ref={group} rotation={[-0.28, 0.35, 0.08]} scale={1.15}>
