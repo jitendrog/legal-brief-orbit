@@ -27,7 +27,7 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
 
 
   return (
-    <group ref={group} rotation={[-0.28, 0.35, 0.08]} scale={1.15}>
+    <group ref={group} rotation={[-0.95, 0.35, 0.12]} scale={1.2}>
       {sheets.map((i) => (
         <Float
           key={i}
@@ -35,7 +35,7 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
           rotationIntensity={reduced ? 0 : 0.12}
           floatIntensity={reduced ? 0 : 0.35}
         >
-          <mesh position={[(i - 2) * 0.08, (i - 2) * 0.36, (i - 2) * 0.05]} castShadow>
+          <mesh position={[(i - 2) * 0.06, (i - 2) * 0.26, (i - 2) * 0.04]} castShadow>
             <boxGeometry args={[1.5, 0.02, 2.05]} />
             <meshStandardMaterial
               color={c.paper}
@@ -45,7 +45,10 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
               emissiveIntensity={0.4}
             />
           </mesh>
-          <mesh position={[(i - 2) * 0.08, (i - 2) * 0.36 + 0.012, (i - 2) * 0.05]}>
+          <mesh
+            position={[(i - 2) * 0.06, (i - 2) * 0.26 + 0.013, (i - 2) * 0.04]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          >
             <planeGeometry args={[1.2, 1.7]} />
             <meshBasicMaterial
               color={i === 2 ? c.cyan : c.deep}
