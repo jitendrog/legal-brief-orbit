@@ -42,7 +42,7 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
               metalness={0.25}
               roughness={0.55}
               emissive={c.deep}
-              emissiveIntensity={0.4}
+              emissiveIntensity={0.12}
             />
           </mesh>
           <mesh
@@ -53,7 +53,7 @@ function DocumentStack({ reduced }: { reduced: boolean }) {
             <meshBasicMaterial
               color={i === 2 ? c.cyan : c.deep}
               transparent
-              opacity={i === 2 ? 0.18 : 0.35}
+              opacity={i === 2 ? 0.3 : 0.16}
               side={THREE.DoubleSide}
             />
           </mesh>
