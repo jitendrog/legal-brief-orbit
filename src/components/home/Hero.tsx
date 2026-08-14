@@ -26,7 +26,7 @@ export function Hero() {
             <HeroScene
               quality={low ? "low" : "high"}
               reducedMotion={reduced}
-              offsetX={low ? 0 : 1.5}
+              offsetX={low ? 0 : 1.0}
             />
           </Suspense>
         </ClientOnly>
